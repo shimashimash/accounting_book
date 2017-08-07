@@ -1,0 +1,35 @@
+.header {
+    display: flex;
+    width: 100%;
+}
+
+.header div {
+    width: 33%;
+    text-align: center;
+}
+
+.header h2 {
+    display: inline;
+}
+
+.mb10 {
+    text-align: center;
+}
+
+.message-bg {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.date {
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.date h3 {
+    display: inline;
+}
+
+.form-group.control-btn {
+    text-align: center;
+}
