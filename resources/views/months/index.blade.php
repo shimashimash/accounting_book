@@ -1,22 +1,26 @@
 @extends('layouts.app')
 
-@php($monthlyCategories = App\Repositories\Entities\Month::$monthlyCategories)
+@php
+    $monthlyCategories = App\Repositories\Entities\Month::$monthlyCategories;
+    $subMonth = $date->copy()->subMonth();
+    $addMonth = $date->copy()->addMonth();
+@endphp
 
 @section('content')
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="header">
                 <div>
-                    <a href="/home/{{ $date['last']['year'] }}/{{ sprintf('%02d', $date['last']['month']) }}"
+                    <a href="/months/{{ $subMonth->format('Y-m') }}"
                        class="btn btn-default">
                         前月へ
                     </a>
                 </div>
                 <div>
-                    <h2>{{ $date['year'] }}年{{ (int) $date['month'] }}月</h2>
+                    <h2>{{ $date->format('Y年m月') }}</h2>
                 </div>
                 <div>
-                    <a href="/home/{{ $date['next']['year'] }}/{{ sprintf('%02d', $date['next']['month']) }}"
+                    <a href="/months/{{ $addMonth->format('Y-m') }}"
                        class="btn btn-default">
                         来月へ
                     </a>
@@ -44,11 +48,11 @@
                             </tbody>
                         </table>
                         <div class="col-ms-2">
-                            <a href="/home/detail/{{ $date['year']. sprintf('%02d', $date['month']) }}"
+                            <a href="/months/detail/{{ $date->format('Y-m') }}"
                                class="btn btn-primary">
                                 詳細情報
                             </a>
-                            <a href="/home/{{ $date['year'] }}/{{ sprintf('%02d', $date['month']) }}/edit"
+                            <a href="/months/edit/{{ $date->format('Y-m') }}"
                                class="btn btn-primary">
                                 編集する
                             </a>
@@ -66,7 +70,11 @@
                     <tbody>
                         @foreach($dayAndWeek as $day => $daysOfWeek)
                             <tr>
-                                <td><a href="/add/{{ $date['year'] }}/{{ $date['month'] }}/{{ $day }}">{{ $day }}({{ $daysOfWeek }})</a></td>
+                                <td>
+                                    <a href="/days/{{ $date->format('Y-m'). '-'. $day }}">
+                                        {{ $day }}({{ $daysOfWeek }})
+                                    </a>
+                                </td>
                                 <td>{{ $days[$day]['total'] ?? '0' }}円</td>
                                 <td>{{ $days[$day]['note'] ?? 'なし' }}</td>
                             </tr>

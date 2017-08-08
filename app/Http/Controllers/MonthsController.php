@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PostPriceRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\MonthRepository;
+use Carbon\Carbon;
 
-class HomeController extends Controller
+class MonthsController extends Controller
 {
     /**
      * @var MonthRepository
@@ -28,21 +28,20 @@ class HomeController extends Controller
     /**
      * 一ヶ月の画面を表示する
      *
-     * @param $year
-     * @param $month
+     * @param $date
      * @return mixed
      */
-    public function index($year = null, $month = null)
+    public function index($date = null)
     {
-        $monthId = $this->monthRepository->getMonthId($year, $month);
-        $monthInfo = $this->monthRepository->firstOrCreate(['id' => $monthId]);
+        $date = is_null($date) ? Carbon::today() : Carbon::parse($date);
+        $monthInfo = $this->monthRepository->firstOrCreate(['id' => $date->format('Ym')]);
         $daysInfo = $this->monthRepository->getDays($monthInfo);
 
-        return view('home.index')->with([
+        return view('months.index')->with([
             'month' => $monthInfo,
-            'dayAndWeek' => $this->monthRepository->createMonth($year, $month),
+            'dayAndWeek' => $this->monthRepository->createMonth($date),
             'days' => $daysInfo,
-            'date' => $this->monthRepository->getDate($year, $month),
+            'date' => Carbon::create($date->year, $date->month, 1, 0, 0, 0),
             'monthOfTotal' => $this->monthRepository->getTotalOfMonths($monthInfo),
             'daysOfTotal' => $this->monthRepository->getTotalOfDays($daysInfo),
         ]);
@@ -51,14 +50,14 @@ class HomeController extends Controller
     /**
      * 月の支出を編集する画面
      *
-     * @param $year
-     * @param $month
+     * @param $date
      * @return mixed
      */
-    public function edit($year, $month)
+    public function edit($date)
     {
-        return view('home.edit')->with([
-            'month' => $this->monthRepository->find($year. $month),
+        return view('months.edit')->with([
+            'date' => $date,
+            'month' => $this->monthRepository->find(str_replace('-', '', $date)),
         ]);
     }
 
@@ -72,11 +71,12 @@ class HomeController extends Controller
     public function update(PostPriceRequest $request, $monthId)
     {
         $attributes = $request->input('month');
+        $date = Carbon::parse($request->input('date'));
         $attributes['user'] = Auth::user()->name;
         $this->monthRepository->update($attributes, $monthId);
         session()->put('flash_message', 'データを更新しました');
 
-        return redirect('/home/'.substr($monthId, 0, 4).'/'.substr($monthId, 4));
+        return redirect('/months/'. $date->format('Y-m'));
     }
 
     /**
@@ -90,7 +90,7 @@ class HomeController extends Controller
         $monthInfo = $this->monthRepository->find($id);
         list ($data1, $labels1) = $this->monthRepository->getSpendingMonth($monthInfo);
         list ($data2, $labels2) = $this->monthRepository->getSpendingDays($monthInfo->days);
-        return view('home.detail')->with([
+        return view('months.detail')->with([
             'monthInfo' => $monthInfo,
             'spending1' => $this->monthRepository->getPieChart('spending1', $data1, $labels1),
             'spending2' => $this->monthRepository->getPieChart('spending2', $data2, $labels2),

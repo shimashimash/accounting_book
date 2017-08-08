@@ -6,9 +6,9 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="date">
-                <h3>{{ (int) $month }}月{{ $day }}日</h3>
+                <h3>{{ $date->format('Y年m月d日') }}</h3>
             </div>
-            <form action="/add/{{ $daysInfo->id }}" method="POST">
+            <form action="/days/{{ $daysInfo->id }}" method="POST">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <table class="table">
@@ -36,8 +36,9 @@
                 </div>
 
                 <div class="panel-body">
-                    {{ Form::hidden('day[month_id]', $year. $month) }}
-                    {{ Form::hidden('day[day]', $day) }}
+                    {{ Form::hidden('day[month_id]', $date->format('Ym')) }}
+                    {{ Form::hidden('day[day]', $date->format('d')) }}
+                    {{ Form::hidden('date', $date->format('Y-m')) }}
                     {{ csrf_field() }}
                     <div class="form-group control-btn">
                         {!! Form::submit('OK', ['class' => 'btn btn-primary']) !!}

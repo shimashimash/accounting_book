@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PostPriceRequest;
 use App\Repositories\DayRepository;
+use Carbon\Carbon;
 
-class AddController extends Controller
+class DaysController extends Controller
 {
     /**
      * @var DayRepository
@@ -26,20 +27,21 @@ class AddController extends Controller
     /**
      * 日の詳細画面を表示する
      *
-     * @param $year
-     * @param $month
-     * @param $day
+     * @param $date
      * @return mixed
      */
-    public function index($year, $month, $day)
+    public function index($date)
     {
-        $daysInfo = $this->dayRepository->firstOrCreate(['month_id' => $year. $month, 'day' => $day]);
-
-        return view('add.index')->with([
+        $date = Carbon::parse($date);
+        $daysInfo = $this->dayRepository->firstOrCreate(
+            [
+                'month_id' => $date->format('Ym'),
+                'day' => $date->format('d'),
+            ]
+        );
+        return view('days.index')->with([
+            'date' => $date,
             'daysInfo' => $daysInfo,
-            'year' => $year,
-            'month' => $month,
-            'day' => $day
         ]);
     }
 
@@ -53,9 +55,10 @@ class AddController extends Controller
     public function edit(PostPriceRequest $request, $id)
     {
         $attr = $request->input('day');
+        $date = Carbon::parse($request->input('date'));
         $this->dayRepository->update($attr, $id);
         session()->put('flash_message', 'データを更新しました');
 
-        return redirect('/home/'.substr($attr['month_id'], 0, 4).'/'.substr($attr['month_id'], 4));
+        return redirect('/months/'. $date->format('Y-m'));
     }
 }
