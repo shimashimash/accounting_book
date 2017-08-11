@@ -16,6 +16,17 @@ class Month extends Model implements Transformable
 
     public static $week = ['日', '月', '火', '水', '木', '金', '土'];
 
+    // 曜日(月曜始まり)
+    public static $dayOfWeek = [
+        1 => '月',
+        2 => '火',
+        3 => '水',
+        4 => '木',
+        5 => '金',
+        6 => '土',
+        7 => '日',
+    ];
+
     public static $monthlyCategories = [
         'house_rent'   => '家賃',
         'water_works'  => '水道代',

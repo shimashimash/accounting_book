@@ -39,11 +39,11 @@ class MonthsController extends Controller
 
         return view('months.index')->with([
             'month' => $monthInfo,
-            'dayAndWeek' => $this->monthRepository->createMonth($date),
             'days' => $daysInfo,
             'date' => Carbon::create($date->year, $date->month, 1, 0, 0, 0),
             'monthOfTotal' => $this->monthRepository->getTotalOfMonths($monthInfo),
             'daysOfTotal' => $this->monthRepository->getTotalOfDays($daysInfo),
+            'calendars' => $this->monthRepository->getMonthCalendar($date),
         ]);
     }
 

@@ -6,6 +6,7 @@ use Prettus\Repository\Eloquent\BaseRepository;
 use App\Repositories\Criteria\RequestCriteria;
 use App\Repositories\Entities\Month;
 use App\Repositories\Entities\Day;
+use Carbon\Carbon;
 
 /**
  * Class MonthRepositoryEloquent
@@ -61,17 +62,39 @@ class MonthRepositoryEloquent extends BaseRepository implements MonthRepository
     }
 
     /**
-     * 月の情報を取得する
+     * 一か月分のカレンダーを生成する
      *
-     * @param string $date
+     * @param $date
      * @return array
      */
-    public function createMonth($date)
+    public function getMonthCalendar($date)
     {
-        for ($i = 1; $i <= $date->daysInMonth; $i++) {
-            $day[$i] = Month::$week[date('w', mktime(0, 0, 0, $date->month, $i, $date->year))];
+        $j = 0;
+        $calendar = [];
+        for ($i = 1; $i < $date->daysInMonth + 1; $i++) {
+            // 曜日を取得する
+            $week = date('N', mktime(0, 0, 0, $date->month, $i, $date->year));
+            // 一日(ついたち)の場合
+            if ($i == 1) {
+                for ($s = 1; $s < $week; $s++) {
+                    $calendar[$j]['day'] = '';
+                    $calendar[$j]['dayOfWeek'] = '';
+                    $j++;
+                }
+            }
+            $calendar[$j]['day'] = Carbon::create($date->year, $date->month, $i, 0, 0, 0);
+            $calendar[$j]['dayOfWeek'] = Month::$dayOfWeek[$week];
+            $j++;
+            // 月末日の場合
+            if ($i == $date->daysInMonth) {
+                for ($e = 1; $e <= 7 - $week; $e++) {
+                    $calendar[$j]['day'] = '';
+                    $calendar[$j]['dayOfWeek'] = '';
+                    $j++;
+                }
+            }
         }
-        return $day;
+        return $calendar;
     }
 
     /**

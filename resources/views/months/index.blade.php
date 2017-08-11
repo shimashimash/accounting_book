@@ -59,26 +59,43 @@
                         </div>
                     </div>
                 </div>
-                <table border="1" class="table table-striped">
+                <table class="table table-bordered table-calendar">
                     <thead>
-                        <tr>
-                            <th style="width: 10%;">日付</th>
-                            <th style="width: 15%;">支出</th>
-                            <th>メモ</th>
-                        </tr>
+                    <tr>
+                        <th>月</th>
+                        <th>火</th>
+                        <th>水</th>
+                        <th>木</th>
+                        <th>金</th>
+                        <th>土</th>
+                        <th>日</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        @foreach($dayAndWeek as $day => $daysOfWeek)
-                            <tr>
-                                <td>
-                                    <a href="/days/{{ $date->format('Y-m'). '-'. $day }}">
-                                        {{ $day }}({{ $daysOfWeek }})
-                                    </a>
+                        <tr>
+                            @php($count = 0)
+                            @foreach ($calendars as $calendar)
+                                <td style="width: 99px; height: 71px;">
+                                    @if ('' != $calendar['day'])
+                                        @php($day = (int) $calendar['day']->format('d'))
+                                        <a href="/days/{{ $calendar['day']->format('Y-m-d') }}">
+                                            {{ $day }}
+                                        </a>
+                                        <br>
+                                        {{ $days[$day]['total'] ?? '0' }}円
+                                        <br>
+                                        @if (isset($days[$day]['note']))
+                                            <img src="/memo-icon.png">
+                                        @endif
+                                    @endif
+                                    @php($count++)
                                 </td>
-                                <td>{{ $days[$day]['total'] ?? '0' }}円</td>
-                                <td>{{ $days[$day]['note'] ?? 'なし' }}</td>
-                            </tr>
-                        @endforeach
+                        @if ($count == 7)
+                        </tr>
+                        <tr>
+                        @php($count = 0)
+                        @endif
+                            @endforeach
                     </tbody>
                 </table>
             </div>
