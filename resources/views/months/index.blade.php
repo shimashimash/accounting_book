@@ -48,7 +48,7 @@
                             </tbody>
                         </table>
                         <div class="col-ms-2">
-                            <a href="/months/detail/{{ $date->format('Y-m') }}"
+                            <a href="/months/detail/{{ $date->format('Ym') }}"
                                class="btn btn-primary">
                                 詳細情報
                             </a>

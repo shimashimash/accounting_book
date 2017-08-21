@@ -38,7 +38,7 @@ return [
     |
     */
 
-    'debug' => env('APP_DEBUG', false),
+    'debug' => env('APP_DEBUG', true),
 
     /*
     |--------------------------------------------------------------------------
@@ -182,6 +182,9 @@ return [
         // chart.js
         Fx3costa\LaravelChartJs\Providers\ChartjsServiceProvider::class,
 
+        //barryvdh/laravel-debugbar
+        Barryvdh\Debugbar\ServiceProvider::class,
+
         // 最後に追加しないとおかしな動作をするので注意
         Prettus\Repository\Providers\RepositoryServiceProvider::class,
     ],
@@ -234,6 +237,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
+        //barryvdh/laravel-debugbar
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
 
     ],
 ];

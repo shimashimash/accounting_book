@@ -36,7 +36,7 @@
                     </button>
 
                     <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/month') }}">
+                    <a class="navbar-brand" href="{{ url('/months') }}">
                         Home
                     </a>
                 </div>
