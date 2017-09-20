@@ -11,7 +11,7 @@
             <div class="date">
                 <h3>{{ $date->format('Y年m月') }}</h3>
             </div>
-            <form action="/home/edit/{{ $month->id }}" method="POST">
+            <form action="/months/edit/{{ $month->id }}" method="POST">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <table class="table">

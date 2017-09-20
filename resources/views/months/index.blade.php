@@ -75,7 +75,7 @@
                         <tr>
                             @php($count = 0)
                             @foreach ($calendars as $calendar)
-                                <td style="width: 99px; height: 71px;">
+                                <td class="note" style="width: 99px; height: 71px;">
                                     @if ('' != $calendar['day'])
                                         @php($day = (int) $calendar['day']->format('d'))
                                         <a href="/days/{{ $calendar['day']->format('Y-m-d') }}">
@@ -85,7 +85,7 @@
                                         {{ $days[$day]['total'] ?? '0' }}円
                                         <br>
                                         @if (isset($days[$day]['note']))
-                                            <img src="/memo-icon.png">
+                                            <img src="/memo-icon.png" alt="{{ $days[$day]['note'] }}">
                                         @endif
                                     @endif
                                     @php($count++)
